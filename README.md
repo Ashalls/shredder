@@ -14,4 +14,4 @@ How to use:
 
 Use arrow keys to navigate between the different options.
 Press ENTER to select.
-When selecting drives, use ENTER to select, and Y to confirm.
+When selecting drives, use ENTER to mark, and Y to select marked drives.
