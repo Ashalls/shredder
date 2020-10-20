@@ -129,9 +129,7 @@ def shred(drives):
 
 
 def select_drives():
-    """
-    Prints out all the drives on the system and uses fzf to select the drives.
-    """
+    """Prints out all the drives on the system and uses fzf to select the drives."""
 
     # Clear the terminal
     clear()
@@ -181,9 +179,8 @@ def print_serial():
 
 
 def main():
-    """
-    Run the program from here.
-    """
+    """Run the program from here."""
+    
     show_menu()
 
 
