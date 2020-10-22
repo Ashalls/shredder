@@ -67,10 +67,9 @@ def show_menu():
 
 def badblocks(drives):
     """
-    Runs badblocks on selected drive(s) and creates temporary log files.
-    Once badblocks has finished on all of the selected drive(s), it will
-    copy those log files to the path stored in 'home' and rename them to
-    the name of the selected drive(s). Ex. sda-badblocks.log
+    Run badblocks on selected drive(s) and create a temporary log file for each drive.
+    Once badblocks has finished on all of the selected drive(s), copy those log files
+    to the path stored in 'home' and rename them to the name of the selected drive(s).
     """
 
     # Path to where the logfiles are stored
@@ -97,10 +96,9 @@ def badblocks(drives):
 
 def shred(drives):
     """
-    Runs shred on selected drive(s) and creates temporary log files.
-    Once shred has finished on all of the selected drive(s), it will
-    copy those log files to the path stored in 'home' and rename them to
-    the name of the selected drive(s). Ex. sda-shred.log
+    Run shred on selected drive(s) and create a temporary log file for each drive.
+    Once shred has finished on all of the selected drive(s), copy those log files
+    to the path stored in 'home' and rename them to the name of the selected drive(s).
     """
 
     # Path to where the logfiles are stored
@@ -129,7 +127,7 @@ def shred(drives):
 
 
 def select_drives():
-    """Prints out all the drives on the system and uses fzf to select the drives."""
+    """Print out all the drives on the system and use fzf to let the user select the drives."""
 
     # Clear the terminal
     clear()
@@ -164,12 +162,7 @@ def select_drives():
 
 
 def print_serial():
-    """
-    Print the drivers serial id' so that it can be used
-    to identify the drive(s). Ex. if a drive is bad, you
-    can look for the serial number on the drive(s) so that
-    you know which drive(s) that are bad.
-    """
+    """Print the drivers serial id' so that it can be used to identify the drive(s)."""
 
     # Clear the console
     clear()
@@ -180,7 +173,6 @@ def print_serial():
 
 def main():
     """Run the program from here."""
-    
     show_menu()
 
 
