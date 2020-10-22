@@ -14,8 +14,13 @@ Use the arrow keys to navigate between the different options, and press enter
 to select. When selecting drives, use enter to mark drives and y to select
 marked drive(s).
 """
+# Checks if enquiries is installed which is necessary for this program to work.
+try:
+    import enquiries
+except:
+    print("Enquiries is required for this program. Install it with 'pip3 install enquiries'.")
+    exit(-1)
 
-import enquiries
 import subprocess
 import os
 import tempfile
@@ -31,7 +36,7 @@ def show_menu():
     clear()
 
     # Print title
-    print("Shredder V1.5\n")
+    print("Shredder V1.6\n")
 
     # Print different options that the user can select between
     options = ['1 - Shred and check drive(s) for badblocks',
@@ -174,6 +179,7 @@ def print_serial():
 def main():
     """Run the program from here."""
     show_menu()
+
 
 
 if __name__ == '__main__':
