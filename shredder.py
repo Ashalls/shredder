@@ -17,10 +17,11 @@ marked drive(s).
 # Checks if enquiries is installed which is necessary for this program to work.
 try:
     import enquiries
-except:
+except ImportError as e:
     print("Enquiries is required for this program. Install it with 'pip3 install enquiries'.")
     exit(-1)
 
+from pathlib import Path
 import subprocess
 import os
 import tempfile
@@ -36,7 +37,7 @@ def show_menu():
     clear()
 
     # Print title
-    print("Shredder V1.6\n")
+    print("Shredder V1.7\n")
 
     # Print different options that the user can select between
     options = ['1 - Shred and check drive(s) for badblocks',
@@ -50,20 +51,29 @@ def show_menu():
     # Check which option the user chose and run it
 
     if choice[0] == "1":            # Shred drive(s) and check for badblocks
-        drives = select_drives()    # Run select_drive to let the user select drive(s) to perform the action on
+        # Run select_drive to let the user select drive(s) to perform the
+        # action on
+        drives = select_drives()
         shred(drives)               # Run shred on selected drive(s)
         badblocks(drives)           # Run badblocks on selected drive(s)
 
     elif choice[0] == "2":          # Shred drive(s) only
-        drives = select_drives()    # Run select_drive to let the user select drive(s) to perform the action on
+        # Run select_drive to let the user select drive(s) to perform the
+        # action on
+        drives = select_drives()
         shred(drives)               # Run shred on selected drive(s)
 
     elif choice[0] == "3":          # Run badblocks on drive(s) only
-        drives = select_drives()    # Run select_drive to let the user select drive(s) to perform the action on
+        # Run select_drive to let the user select drive(s) to perform the
+        # action on
+        drives = select_drives()
         badblocks(drives)           # Run badblocks on selected drive(s)
 
-    elif choice[0] == "4":          # Print serial id's so you can identify the drive(s)
-        print_serial()              # Run print_serial which prints out the serial id's of each drive on screen
+    # Print serial id's so you can identify the drive(s)
+    elif choice[0] == "4":
+        # Run print_serial which prints out the serial id's of each drive on
+        # screen
+        print_serial()
 
     elif choice[0] == "5":          # Exit the program
         clear()
@@ -87,8 +97,12 @@ def badblocks(drives):
 
     processes = []
     for drive in drives:
-        file = tempfile.NamedTemporaryFile(prefix='tempfile', dir='/tmp', delete=False)
-        process = subprocess.Popen("badblocks -nv /dev/{} 2>&1".format(drive), shell=True, stdout=file)
+        file = tempfile.NamedTemporaryFile(
+            prefix='tempfile', dir='/tmp', delete=False)
+        process = subprocess.Popen(
+            "badblocks -nv /dev/{} 2>&1".format(drive),
+            shell=True,
+            stdout=file)
         processes.append((process, file, drive))
 
     for process, file, drive in processes:
@@ -118,8 +132,12 @@ def shred(drives):
     # Start shred command on selected drive(s)
     # Create a temporary log file with the name of the selected drive(s)
     for drive in drives:
-        file = tempfile.NamedTemporaryFile(prefix='tempfile', dir='/tmp', delete=False)
-        process = subprocess.Popen("shred -n 10 -z -v /dev/{} 2>&1".format(drive), shell=True, stdout=file)
+        file = tempfile.NamedTemporaryFile(
+            prefix='tempfile', dir='/tmp', delete=False)
+        process = subprocess.Popen(
+            "shred -n 10 -z -v /dev/{} 2>&1".format(drive),
+            shell=True,
+            stdout=file)
         processes.append((process, file, drive))
 
     for process, file, drive in processes:
@@ -140,21 +158,27 @@ def select_drives():
     # Selected drives are stored here
     drives = []
 
-    raw_drives = subprocess.Popen(["lsblk -no name,size,mountpoint | fzf -m --bind=enter:toggle+down,y:accept"
-                                   " --layout=reverse --no-info --phony --header='ENTER to select | Y to accept'"
-                                   " | cut -d' ' -f1"], stdout=subprocess.PIPE, shell=True)
+    raw_drives = subprocess.Popen(
+        [
+            "lsblk -no name,size,mountpoint | fzf -m --bind=enter:toggle+down,y:accept"
+            " --layout=reverse --no-info --phony --header='ENTER to select | Y to accept'"
+            " | cut -d' ' -f1"],
+        stdout=subprocess.PIPE,
+        shell=True)
     (out, err) = raw_drives.communicate()
 
     # Let the user now which drive(s) are selected
     print("You selected:")
 
-    # Loop through the selected drives, decode them, split them onto a new line and print them on screen
+    # Loop through the selected drives, decode them, split them onto a new
+    # line and print them on screen
     for line in out.decode("utf-8").split('\n'):
         drives.append(line)
         print(line)
 
     # Ask the user for confirmation
-    confirmation = input("\nAre you sure you want to continue? The process will start immediately. Y/n: ").lower()
+    confirmation = input(
+        "\nAre you sure you want to continue? The process will start immediately. Y/n: ").lower()
 
     # Check user confirmation
     if confirmation == 'n':
@@ -178,8 +202,17 @@ def print_serial():
 
 def main():
     """Run the program from here."""
-    show_menu()
+    fzf_location = Path("/usr/bin/fzf")
 
+    # Checks if fzf is installed
+    if fzf_location.is_file():
+        pass
+    else:
+        print(
+            "Fzf is required for this program. Install it with 'sudo apt-get install fzf'.")
+        exit(-1)
+
+    show_menu()
 
 
 if __name__ == '__main__':
